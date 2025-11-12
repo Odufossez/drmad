@@ -1,14 +1,16 @@
 <template>
   <div>
-    // button list, values/colors from props titles.
+    <button v-for="(item,index) in titles" :key="index" :style="{color:item.color}" @click="$emit('menuClicked',index)">
+      {{item.text}}
+    </button>
   </div>
 </template>
 
 <script setup>
 defineProps({
-  titles: Array
+  titles: Array,
 })
-
+defineEmits(["menuClicked"]);
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
