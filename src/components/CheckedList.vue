@@ -111,6 +111,11 @@ function listButtonClicked() {
   align-items: center;
 }
 
+.list-item:hover {
+  background-color: #f0f0f0;
+  transition: background 0.2s;
+}
+
 table {
   width: 80%;
   max-width: 700px;

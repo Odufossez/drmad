@@ -30,4 +30,7 @@ onMounted(() => {
 
 body {
   font-family: 'Lato';
-}</style>
+}
+
+
+</style>

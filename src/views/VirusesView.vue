@@ -139,4 +139,3 @@ const filterViruses = computed(() => {
 })
 
 </script>
-
