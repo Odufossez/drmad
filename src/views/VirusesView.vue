@@ -52,17 +52,6 @@
     -->
 
     <!-- version avec filtre multi-critères -->
-    <table>
-      <tbody>
-      <tr>
-        <th>Nom</th><th>Prix</th>
-      </tr>
-      <tr v-for="(virus, index) in filterViruses" :key="index">
-        <td>{{virus.name}}</td>
-        <td>{{virus.price}}</td>
-      </tr>
-      </tbody>
-    </table>
 
     <hr />
     <h2>Utilisation de CheckedList</h2>
