@@ -25,7 +25,6 @@
       </tr>
       </tbody>
     </table>
-    <hr/>
 
     <!-- version avec liste séparée : décommenter pour tester
 
@@ -55,8 +54,7 @@
     -->
 
     <!-- version avec filtre multi-critères -->
-
-    <hr/>
+    
     <h2>Utilisation de CheckedList</h2>
     <CheckedList
         :data="filterViruses"
