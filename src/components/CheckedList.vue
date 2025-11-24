@@ -97,23 +97,35 @@ function listButtonClicked() {
 
 
 .checked-list {
+  font-family: 'Lato', Arial, sans-serif;
   margin: 32px auto;
   padding: 12px;
   background: #fff;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
-  max-width: 500px;
+  max-width: 700px;
+  width: 80%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 table {
-  width: 100%;
-  border-collapse: collapse;
+  width: 80%;
+  max-width: 700px;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* espace vertical entre les lignes */
   margin-bottom: 10px;
   margin-left: auto;
   margin-right: auto;
+}
+
+.data-cell,
+.checkbox-cell,
+.button-cell {
+  padding: 16px 12px; /* espace horizontal et vertical dans chaque cellule */
+  font-size: 16px;
 }
 
 .list-item {
