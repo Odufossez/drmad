@@ -93,84 +93,99 @@ function listButtonClicked() {
 </script>
 
 <style scoped>
+
+
+
 .checked-list {
-  margin: 20px 0;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 15px;
-}
-
-.list-item {
-  border-bottom: 1px solid #e0e0e0;
-  transition: background-color 0.2s;
+  font-family: 'Lato', Arial, sans-serif;
+  margin: 32px auto;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  max-width: 700px;
+  width: 80%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .list-item:hover {
-  background-color: #f5f5f5;
+  background-color: #f0f0f0;
+  transition: background 0.2s;
+}
+
+table {
+  width: 80%;
+  max-width: 700px;
+  border-collapse: separate;
+  border-spacing: 0 10px; /* espace vertical entre les lignes */
+  margin-bottom: 10px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.data-cell,
+.checkbox-cell,
+.button-cell {
+  padding: 16px 12px; /* espace horizontal et vertical dans chaque cellule */
+  font-size: 16px;
+}
+
+.list-item {
+  border-bottom: 1px solid #eee;
 }
 
 .checkbox-cell {
-  width: 40px;
+  width: 32px;
   text-align: center;
-  padding: 10px;
-}
-
-.checkbox-cell input[type="checkbox"] {
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
 }
 
 .data-cell {
-  padding: 10px 15px;
-  color: #333;
+  padding: 8px;
+  color: #222;
+  font-size: 15px;
 }
 
 .button-cell {
-  padding: 10px;
   text-align: center;
+  padding: 8px;
 }
 
 .button-cell button {
-  padding: 6px 12px;
-  background-color: #2196F3;
-  color: white;
+  padding: 4px 10px;
+  background: #2196F3;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 14px;
-  transition: background-color 0.3s;
+  font-size: 13px;
 }
 
 .button-cell button:hover {
-  background-color: #1976D2;
+  background: #1976D2;
 }
 
 .list-button {
-  padding: 10px 20px;
-  background-color: #4CAF50;
-  color: white;
+  padding: 8px 16px;
+  background: #4CAF50;
+  color: #fff;
   border: none;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 16px;
-  font-weight: bold;
-  margin-top: 10px;
-  transition: background-color 0.3s;
+  font-size: 15px;
+  margin-top: 8px;
 }
 
 .list-button:hover {
-  background-color: #388E3C;
+  background: #388E3C;
 }
 
 .amount-input {
-  width: 60px;
-  padding: 5px;
-  margin-right: 10px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
+  width: 50px;
+  padding: 4px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
 }
 </style>
