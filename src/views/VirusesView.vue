@@ -2,11 +2,14 @@
   <div>
     <h1>Les virus</h1>
     <span>Filtres :</span>
-    <hr />
-    <label for="filterpriceactive">par prix</label><input type="checkbox" v-model="filterPriceActive" id="filterpriceactive">
-    <label for="filternameactive">par nom</label><input type="checkbox" v-model="filterNameActive" id="filternameactive">
-    <label for="filterstockactive">par stock</label><input type="checkbox" v-model="filterStockActive" id="filterstockactive">
-    <hr />
+    <hr/>
+    <label for="filterpriceactive">par prix</label><input type="checkbox" v-model="filterPriceActive"
+                                                          id="filterpriceactive">
+    <label for="filternameactive">par nom</label><input type="checkbox" v-model="filterNameActive"
+                                                        id="filternameactive">
+    <label for="filterstockactive">par stock</label><input type="checkbox" v-model="filterStockActive"
+                                                           id="filterstockactive">
+    <hr/>
     <table>
       <tbody>
       <tr>
@@ -22,7 +25,7 @@
       </tr>
       </tbody>
     </table>
-    <hr />
+    <hr/>
 
     <!-- version avec liste séparée : décommenter pour tester
 
@@ -53,7 +56,7 @@
 
     <!-- version avec filtre multi-critères -->
 
-    <hr />
+    <hr/>
     <h2>Utilisation de CheckedList</h2>
     <CheckedList
         :data="filterViruses"
@@ -62,6 +65,9 @@
         :checked="checkedItems"
         :item-button="{show: true, text: 'Info'}"
         :list-button="{show: true, text: 'Voir sélection'}"
+        @item-button-clicked="viewVirusInfo"
+        @list-button-clicked="viewCheckedViruses"
+        @checked-changed="virusSelected"
     />
 
   </div>
@@ -89,6 +95,8 @@ const filterStockActive = ref(false)
 /* ***************************
   COMPUTED
  *************************** */
+let checkedItems = ref([])
+
 const filterVirusesByPrice = computed(() => {
   // active filter => get filtered list
   if (filterPriceActive.value) {
@@ -137,5 +145,35 @@ const filterViruses = computed(() => {
   }
   return list
 })
+
+function viewVirusInfo(index) {
+  let item = filterViruses.value[index]
+  let stock = ""
+  if (item.stock <= 0) stock = "non";
+  else stock = "oui";
+  alert("Name : " + item.name + "\nPrice : " + item.price + "\nStock : " + stock + "");
+}
+
+function viewCheckedViruses() {
+  let virusesName = ([])
+  if(checkedItems.value.length === 0 || checkedItems.value.length === undefined) alert("Pas de virus dans filterViruses");
+  else{
+    for (let i = 0; i < checkedItems.value.length; i++) {
+      if (checkedItems.value[i].checked) virusesName.push(filterViruses.value[checkedItems.value[i].index].name)
+    }
+    alert(virusesName.join("\n"))
+  }
+
+}
+
+function virusSelected(index) {
+  if (checkedItems.value[index] === undefined) {
+    checkedItems.value[index] = {checked: false, index: index};
+  }
+
+  const currentState = checkedItems.value[index]?.checked || false;
+
+  checkedItems.value[index].checked = !currentState;
+}
 
 </script>
