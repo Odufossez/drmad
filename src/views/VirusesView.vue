@@ -54,8 +54,7 @@
     -->
 
     <!-- version avec filtre multi-critères -->
-    
-    <h2>Utilisation de CheckedList</h2>
+
     <CheckedList
         :data="filterViruses"
         :fields="['name', 'price']"
