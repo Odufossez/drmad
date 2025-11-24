@@ -1,5 +1,7 @@
 import { items, shopusers, bankaccounts, transactions } from '@/datasource/data.js'
 import {v4 as uuidv4} from 'uuid'
+import bcryptjs from 'bcryptjs'
+
 /* Les fonctions ci-dessous doivent mimer ce que renvoie l'API en fonction des requêtes possibles.
 
   Dans certains cas, ces fonctions vont avoir des paramètres afin de filtrer les données qui se trouvent dans data.js
@@ -17,11 +19,17 @@ import {v4 as uuidv4} from 'uuid'
  * @param data
  * @returns {{error: number, status: number, data: string}|{error: number, status: number, data: {_id: string | *, name: string | *, login: string | *, email: string | *, session}}}
  */
-function shopLogin(data) {
+async function shopLogin(data) {
+    console.log("Data :" + data.login + " " + data.password);
   if ((!data.login) || (!data.password)) return {error: 1, status: 404, data: 'aucun login/pass fourni'}
   // pour simplifier : test uniquement le login
   let user = shopusers.find(e => e.login === data.login)
-  if (!user) return {error: 1, status: 404, data: 'login/pass incorrect'}
+  if (!user) return {error: 1, status: 404, data: 'login incorrect'}
+  console.log(user);
+  let mdp = bcryptjs.compareSync(data.password, user.password);
+  console.log(mdp);
+  if (!mdp) return {error: 1, status: 404, data: 'pass incorrect'}
+
   // générer un uuid de session pour l'utilisateur si non existant
   if (!user.session) {
     user.session = uuidv4()

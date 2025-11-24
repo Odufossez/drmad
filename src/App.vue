@@ -14,7 +14,7 @@ const shopStore = useShopStore()
 
 const menus = ref([
   {text: 'Viruses', color: "green"},
-  {text: 'Shop Login', color: "blue"},
+  {text: 'Shop', color: "blue"},
   {text: 'Compte Bancaire', color: "red"},
 ])
 
