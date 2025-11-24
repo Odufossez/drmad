@@ -26,45 +26,16 @@
       </tbody>
     </table>
 
-    <!-- version avec liste séparée : décommenter pour tester
-
-    <p>Liste filtrée par prix</p>
-    <ul>
-      <li v-for="(virus, index) in filterVirusesByPrice" :key="index">{{virus.name}} : {{virus.price}}</li>
-    </ul>
-    <hr />
-    <p>Liste filtrée par nom</p>
-    <ul>
-      <li v-for="(virus, index) in filterVirusesByName" :key="index">{{virus.name}} : {{virus.price}}</li>
-    </ul>
-    <hr />
-    <p>Liste filtrée par stock</p>
-    <table>
-      <tbody>
-      <tr>
-        <th>Nom</th><th>Prix</th>
-      </tr>
-      <tr v-for="(virus, index) in filterVirusesByStock" :key="index">
-        <td>{{virus.name}}</td>
-        <td>{{virus.price}}</td>
-      </tr>
-      </tbody>
-    </table>
-
-    -->
-
-    <!-- version avec filtre multi-critères -->
-
     <CheckedList
         :data="filterViruses"
         :fields="['name', 'price']"
         :item-check="true"
-        :checked="checkedItems"
+        :checked = "checked"
         :item-button="{show: true, text: 'Info'}"
         :list-button="{show: true, text: 'Voir sélection'}"
         @item-button-clicked="viewVirusInfo"
         @list-button-clicked="viewCheckedViruses"
-        @checked-changed="virusSelected"
+        @checked-changed="changeSelected"
     />
 
   </div>
@@ -92,8 +63,13 @@ const filterStockActive = ref(false)
 /* ***************************
   COMPUTED
  *************************** */
-let checkedItems = ref([])
-
+let selected = ref([]) //contient des indices globaux
+const checked = computed(() => {
+  return filterViruses.value.map(v => {
+    const globalIndex = shopStore.viruses.indexOf(v)
+    return selected.value.includes(globalIndex)
+  })
+})
 const filterVirusesByPrice = computed(() => {
   // active filter => get filtered list
   if (filterPriceActive.value) {
@@ -143,6 +119,7 @@ const filterViruses = computed(() => {
   return list
 })
 
+//la boite d'alerte quand on clique sur info
 function viewVirusInfo(index) {
   let item = filterViruses.value[index]
   let stock = ""
@@ -151,26 +128,29 @@ function viewVirusInfo(index) {
   alert("Name : " + item.name + "\nPrice : " + item.price + "\nStock : " + stock + "");
 }
 
+//la boite d'alerte quand on clique sur le bouton "Voir sélection".
 function viewCheckedViruses() {
-  let virusesName = ([])
-  if(checkedItems.value.length === 0 || checkedItems.value.length === undefined) alert("Pas de virus dans filterViruses");
-  else{
-    for (let i = 0; i < checkedItems.value.length; i++) {
-      if (checkedItems.value[i].checked) virusesName.push(filterViruses.value[checkedItems.value[i].index].name)
-    }
-    alert(virusesName.join("\n"))
-  }
-
+  const virusNames = selected.value
+      .map(i => shopStore.viruses[i].name)
+      .join(', ')
+  if (virusNames.length === 0) alert("No viruses selected")
+  else alert(virusNames)
 }
 
-function virusSelected(index) {
-  if (checkedItems.value[index] === undefined) {
-    checkedItems.value[index] = {checked: false, index: index};
+function changeSelected(filteredIdx) {
+  const virus = filterViruses.value[filteredIdx]
+
+  // on cherche l’indice dans la liste complète
+  const globalIndex = shopStore.viruses.indexOf(virus)
+
+  const pos = selected.value.indexOf(globalIndex)
+
+  if (pos === -1) {
+    selected.value.push(globalIndex)
+  } else {
+    selected.value.splice(pos, 1)
   }
-
-  const currentState = checkedItems.value[index]?.checked || false;
-
-  checkedItems.value[index].checked = !currentState;
 }
+
 
 </script>
