@@ -64,6 +64,17 @@
       </tbody>
     </table>
 
+    <hr />
+    <h2>Utilisation de CheckedList</h2>
+    <CheckedList
+        :data="filterViruses"
+        :fields="['name', 'price']"
+        :item-check="true"
+        :checked="checkedItems"
+        :item-button="{show: true, text: 'Info'}"
+        :list-button="{show: true, text: 'Voir sélection'}"
+    />
+
   </div>
 </template>
 
@@ -73,6 +84,7 @@
  *************************** */
 import {ref, computed} from "vue"
 import {useShopStore} from "@/stores/shop.js";
+import CheckedList from "@/components/CheckedList.vue";
 
 /* ***************************
   STATE
