@@ -45,7 +45,7 @@
 /* ***************************
   IMPORTS
  *************************** */
-import {ref, computed} from "vue"
+import {ref, computed, watch} from "vue"
 import {useShopStore} from "@/stores/shop.js";
 import CheckedList from "@/components/CheckedList.vue";
 
@@ -152,5 +152,15 @@ function changeSelected(filteredIdx) {
   }
 }
 
+watch(filterViruses, (newList) => {
+  // obtenir les indices globaux de la liste filtrée
+  const filteredGlobalIndices = newList.map(v =>
+      shopStore.viruses.indexOf(v)
+  )
 
+  // ne garder que ceux qui sont encore présents
+  selected.value = selected.value.filter(idx =>
+      filteredGlobalIndices.includes(idx)
+  )
+})
 </script>
