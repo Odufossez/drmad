@@ -13,8 +13,8 @@ import NavBar from "@/components/NavBar.vue";
 const shopStore = useShopStore()
 
 const menus = ref([
-  {text: 'Shop Login', color: "green"},
-  {text: 'Viruses', color: "blue"},
+  {text: 'Viruses', color: "green"},
+  {text: 'Shop Login', color: "blue"},
   {text: 'Compte Bancaire', color: "red"},
 ])
 
