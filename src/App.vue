@@ -1,7 +1,6 @@
 <template>
   <h1>Welcome to DrMad app</h1>
-  <NavBar :titles="menus" @menuClicked="(route)=>{
-    $router.push($router.getRoutes()[(route % $router.getRoutes().length)].path)}"></NavBar>
+  <NavBar :titles="menus"></NavBar>
   <router-view></router-view>
 </template>
 
@@ -13,9 +12,9 @@ import NavBar from "@/components/NavBar.vue";
 const shopStore = useShopStore()
 
 const menus = ref([
-  {text: 'Viruses', color: "green"},
-  {text: 'Shop', color: "blue"},
-  {text: 'Compte Bancaire', color: "red"},
+  {text: 'Viruses', color: "green" , routing: '/shop/items'},
+  {text: 'Shop', color: "blue" , routing: '/shop/login'},
+  {text: 'Compte Bancaire', color: "red" , routing: '/bank/account'}
 ])
 
 // Dès que l'appli est lancée, on va chercher la liste des virus pour la stocker dans le store
