@@ -10,35 +10,35 @@ const routes = [
     {
         path: '/shop/items',
         name: 'shopitems',
-        component: VirusesView
+        components: {default : VirusesView}
     },
     // route pour accéder au compte bancaire
     {
         path: '/bank/account',
         name: 'bankaccount',
-        component: () => import('@/views/BankAccountView.vue')
+        components: {default : () => import('@/views/BankAccountView.vue')}
     },
     {
         path: '/shop',
         name: 'shop',
-        component: ShopView,
+        components: {default : ShopView},
         children: [{
-            path: 'home',
+            path: '',
             name: 'shophome',
-            component: ShopHome,
-            alias: '/shop'
-        }, {
+            components: {shopmain : ShopHome },
+            alias: ['shop']
+        },{
             path: 'buy',
             name: 'shopbuy',
-            component: ShopBuy
+            component: {shopmain : ShopBuy }
         }, {
             path: 'orders',
             name: 'shoporders',
-            component: ShopOrders
+            components: {shopmain : ShopOrders}
         }, {
             path: 'pay/:orderId',
             name: 'shoppay',
-        }, {
+        }, { //todo
             path: 'login',
             name: 'shoplogin',
             // import dynamique du composant, plutôt qu'en début de fichier, comme la 1ère route.
