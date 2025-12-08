@@ -4,6 +4,7 @@ import ShopView from "@/views/ShopView.vue";
 import ShopHome from "@/views/ShopHome.vue";
 import ShopBuy from "@/views/ShopBuy.vue";
 import ShopOrders from "@/views/ShopOrders.vue";
+import ShopLoginView from "@/views/ShopLoginView.vue";
 
 const routes = [
     // route pour afficher la liste des virus
@@ -38,11 +39,11 @@ const routes = [
         }, {
             path: 'pay/:orderId',
             name: 'shoppay',
-        }, { //todo
+        }, { //
             path: 'login',
             name: 'shoplogin',
             // import dynamique du composant, plutôt qu'en début de fichier, comme la 1ère route.
-            component: () => import('@/views/ShopLoginView.vue')
+            components: {shopmain : ShopLoginView}
         }]
     }
 ]

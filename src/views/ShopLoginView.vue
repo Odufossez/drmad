@@ -32,7 +32,7 @@ async function authentification(){
   console.log( "Response erreur = " + response.error)
   if (response.error === 0 ){
     console.log("response error 0")
-    await router.push({name: 'shopbuy'});
+    await router.push({name: 'shopbuy'});menus
   } else {
     alert(response.data)
     password.value = ''
