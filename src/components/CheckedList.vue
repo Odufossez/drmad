@@ -18,13 +18,10 @@
 
           <!-- Bouton d'item si itemButton.show est true -->
           <td v-if="itemButton && itemButton.show" class="button-cell">
-            <input 
-              v-if="itemAmount" 
-              type="number" 
-              v-model="amounts[index]" 
-              min="1" 
-              class="amount-input"
-            >
+            <span v-if="itemAmount">
+              <input type="number" v-model="amounts[index]" class="amount-input" />
+            </span>
+            <!-- Button info-->
             <button @click="itemButtonClicked(index)">
               {{ itemButton.text }}
             </button>
@@ -82,6 +79,7 @@ function listButtonClicked() {
       props.checked.forEach((isChecked, index) => {
         if (isChecked) {
           selected.push({ index, amount: amounts.value[index] });
+          selected.checked = false; //déselectionne la case
         }
       });
     }

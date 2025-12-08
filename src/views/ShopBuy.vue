@@ -11,9 +11,13 @@ const menus = ref([
 </script>
 
 <template>
-  <h1> SHOP BUY</h1>
+  <h1> BOUTIQUE </h1>
 
   <NavBar :titles="menus" >  </NavBar>
+
+  <div></div>
+
+  <div></div>
 
 </template>
 

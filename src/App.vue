@@ -13,7 +13,7 @@ const shopStore = useShopStore()
 
 const menus = ref([
   {text: 'Viruses', color: "green" , routing: '/shop/items'},
-  {text: 'Shop', color: "blue" , routing: '/shop/login'},
+  {text: 'Shop', color: "blue" , routing: '/shop'},
   {text: 'Compte Bancaire', color: "red" , routing: '/bank/account'}
 ])
 
