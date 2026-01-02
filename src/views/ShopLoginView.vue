@@ -11,28 +11,22 @@
 </template>
 
 <script setup>
-/* ***************************
-  IMPORTS
- *************************** */
-import {ref} from "vue";
-import {useShopStore} from "@/stores/shop.js";
-import localsourceService from "@/services/localsource.service.js";
+import { ref } from "vue";
+import { useShopStore } from "@/stores/shop.js";
 import router from "@/router/index.js";
 
-/* ***************************
-  STATE
- *************************** */
 const username = ref('')
 const password = ref('')
 const shopStore = useShopStore()
 
-async function authentification(){
-  //console.log("authentification -> login = " + username.value + " password = " + password.value)
-  const response = await localsourceService.shopLogin({login:username.value, password:password.value})
-  console.log( "Response erreur = " + response.error)
-  if (response.error === 0 ){
-    console.log("response error 0")
-    await router.push({name: 'shopbuy'});menus
+async function authentification() {
+  const response = await shopStore.shopLogin({
+    login: username.value,
+    password: password.value
+  })
+
+  if (response.error === 0) {
+    router.push({ name: 'shophome' });
   } else {
     alert(response.data)
     password.value = ''

@@ -50,7 +50,42 @@ async function getAllViruses() {
   return response
 }
 
+async function updateBasket(userId, basket) {
+  return LocalSource.updateBasket(userId, basket)
+}
+
+async function getBasket(userId) {
+  return LocalSource.getBasket(userId)
+}
+
+async function orderBasket(userId, basket) {
+  return LocalSource.orderBasket(userId, basket)
+}
+
+async function getOrder(userId, orderId) {
+  return LocalSource.getOrder(userId, orderId)
+}
+
+async function payOrder(userId, orderId) {
+  return LocalSource.payOrder(userId, orderId)
+}
+
+async function getUserOrders(userId) {
+  return LocalSource.getUserOrders(userId);
+}
+
+async function cancelOrder(userId, uuid) {
+  return LocalSource.cancelOrder(userId, uuid);
+}
+
 export default {
   shopLogin,
-  getAllViruses
+  getAllViruses,
+  updateBasket,
+  getBasket,
+  orderBasket,
+  getOrder,
+  payOrder,
+  getUserOrders,
+  cancelOrder
 }

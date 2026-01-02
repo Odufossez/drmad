@@ -1,6 +1,6 @@
 <template>
   <div class="navbar" id="navbar">
-    <button v-for="(item,index) in titles" :key="index" :style="{color:item.color}" @click="goTo(index)">
+    <button v-for="(item,index) in titles" :key="index" :style="{color:item.color}" @click="clickMenu(index)">
       {{item.text}}
     </button>
   </div>
@@ -12,17 +12,18 @@ import router from "@/router/index.js";
 const props = defineProps({
   titles: Array,
 })
-defineEmits(["menuClicked"]);
 
+const emit = defineEmits(["menuClicked"]);
 
-function goTo(linkedIndex){
-  try{
-    router.push(props.titles[linkedIndex].routing)
-  } catch (e){
+function clickMenu(linkedIndex) {
+  emit("menuClicked", linkedIndex);
+
+  try {
+    router.push(props.titles[linkedIndex].routing) ;
+  } catch (e) {
     console.log(e)
   }
 }
-
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

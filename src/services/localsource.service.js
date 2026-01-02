@@ -30,17 +30,23 @@ async function shopLogin(data) {
   console.log(mdp);
   if (!mdp) return {error: 1, status: 404, data: 'pass incorrect'}
 
-  // générer un uuid de session pour l'utilisateur si non existant
-  if (!user.session) {
-    user.session = uuidv4()
-  }
+    if (!user.session) {
+        user.session = uuidv4()
+    }
+
+    let userRole = 'user'; // Par défaut
+    if (user.login === 'drmad') {
+        userRole = 'admin';
+    }
+
   // retourne uniquement les champs nécessaires
   let u = {
     _id: user._id,
     name: user.name,
     login: user.login,
     email: user.email,
-    session: user.session
+    session: user.session,
+      role: userRole
   }
   return {error: 0, status: 200, data: u}
 }
@@ -94,9 +100,111 @@ function getAccountTransactions(number) {
   }
 }
 
+//maj du panier quand un utilisateur se connecte
+function updateBasket(userId, content) {
+    let user = shopusers.find(e => e._id === userId);
+    if (user) {
+        user.basket = JSON.parse(JSON.stringify(content));
+        return { error: 0, status: 200, data: 'Panier mis à jour' }
+    }
+    return { error: 1, status: 404, data: 'Utilisateur non trouvé' }
+}
+
+function getBasket(userId) {
+    let user = shopusers.find(u => u._id === userId)
+    if (user) {
+        // Si l'utilisateur n'a pas encore de panier, on l'initialise
+        if (!user.basket) {
+            user.basket = { items: [] }
+        }
+
+        let basket = JSON.parse(JSON.stringify(user.basket))
+        return { error: 0, status: 200, data: basket }
+    }
+    return { error: 1, status: 404, data: 'Utilisateur non trouvé' }
+}
+
+function orderBasket(userId, basket) {
+    let user = shopusers.find(u => u._id === userId);
+    if (!user) return { error: 1, data: "User not found" };
+
+    let total = 0;
+    const orderItems = [];
+
+    basket.items.forEach(basketEntry => {
+        const virus = items.find(v => v._id === basketEntry.item);
+        if (virus) {
+            total += virus.price * basketEntry.amount;
+
+            orderItems.push({
+                item: { ...virus },
+                amount: basketEntry.amount
+            });
+        }
+    });
+
+    //création de l'objet commande
+    const newOrder = {
+        items: orderItems,
+        date: new Date(),
+        total: total,
+        status: 'waiting_payment',
+        uuid: uuidv4()
+    };
+
+    //Ajout à la liste des commandes de l'utilisateur
+    if (!user.orders) user.orders = [];
+    user.orders.push(newOrder);
+
+    return { error: 0, status: 200, data: { uuid: newOrder.uuid } };
+}
+
+function getOrder(userId, orderId) {
+    const user = shopusers.find(u => u._id === userId);
+    if (!user) return { error: 1, data: "User not found" };
+    const order = user.orders.find(o => o.uuid === orderId);
+    if (!order) return { error: 1, data: "Order not found" };
+    return { error: 0, status: 200, data: order };
+}
+
+function payOrder(userId, orderId) {
+    const user = shopusers.find(u => u._id === userId);
+    if (!user) return { error: 1, data: "User not found" };
+    const order = user.orders.find(o => o.uuid === orderId);
+    if (!order) return { error: 1, data: "Order not found - Payment impossible" };
+    order.status = 'finalized';
+    return { error: 0, status: 200, data: order };
+}
+
+function getUserOrders(userId) {
+    const user = shopusers.find(u => u._id === userId);
+    if (!user) return { error: 1, data: "User not found" };
+    const orders = user.orders || [];
+    return { error: 0, status: 200, data: orders };
+}
+
+function cancelOrder(userId, uuid) {
+    const user = shopusers.find(u => u._id === userId);
+    if (!user || !user.orders) return { error: 1, data: "Commande introuvable" };
+
+    const order = user.orders.find(o => o.uuid === uuid);
+    if (order) {
+        order.status = 'cancelled'; // Change le statut à "cancelled"
+        return { error: 0, status: 200, data: "Commande annulée" };
+    }
+    return { error: 1, data: "Échec de l'annulation" };
+}
+
 export default{
-  shopLogin,
-  getAllViruses,
-  getAccountAmount,
-  getAccountTransactions,
+    shopLogin,
+    getAllViruses,
+    getAccountAmount,
+    getAccountTransactions,
+    updateBasket,
+    getBasket,
+    orderBasket,
+    getOrder,
+    payOrder,
+    getUserOrders,
+    cancelOrder
 }
