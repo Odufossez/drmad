@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <h1>Welcome to DrMad app</h1>
 
   <NavBar
@@ -77,4 +77,45 @@ body {
   font-family: 'Lato',sans-serif;
 }
 
+</style> -->
+
+
+
+<template>
+  <div class="app-container">
+    <h1>Bienvenue sur DrMad App</h1>
+
+    <NavBar
+      :titles="main_menu"
+      @menu-clicked="handleMainMenuClick"
+    />
+
+    <router-view></router-view>
+  </div>
+</template>
+
+<script setup>
+import { ref } from "vue";
+import NavBar from "@/components/NavBar.vue";
+
+// Menu principal de l'application
+const main_menu = ref([
+  { text: 'Boutique', color: 'blue', routing: '/shop' },
+  { text: 'Banque', color: 'purple', routing: '/bank/account' } // Tu pourras changer la route plus tard si tu crées une BankView
+]);
+
+function handleMainMenuClick(index) {
+  // Rien de spécial à faire ici pour l'instant car NavBar gère déjà le router.push
+  // Mais tu pourrais ajouter des logs si besoin
+  console.log("Navigation vers :", main_menu.value[index].text);
+}
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+body {
+  font-family: 'Lato', sans-serif;
+  text-align: center; /* Centre le texte globalement comme demandé */
+}
 </style>
