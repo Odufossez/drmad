@@ -176,21 +176,22 @@ function getOrder(userId, orderId) {
 //     return { error: 0, status: 200, data: order };
 // }
 
-function payOrder(userId, orderId) {
+function payOrder(userId, orderData) {
     const user = shopusers.find(u => u._id === userId);
     if (!user) return { error: 1, data: "User not found" };
 
-    // On cherche la commande (orderData peut être un objet {uuid, transactionUuid})
-    // Note : On gère le cas où orderData est juste l'ID (vieux code) ou un objet
-    const orderId = orderData.uuid || orderData; 
-    const order = user.orders.find(o => o.uuid === orderId);
+    // On récupère l'ID, que orderData soit un objet (nouveau code) ou une string (vieux code)
+    // On utilise "targetUuid" pour ne pas entrer en conflit avec une autre variable
+    const targetUuid = orderData.uuid || orderData; 
+    
+    const order = user.orders.find(o => o.uuid === targetUuid);
     
     if (!order) return { error: 1, data: "Order not found - Payment impossible" };
 
-    // --- DEBUT DES MODIFICATIONS ---
-    
     // 1. Récupération de l'UUID de transaction fourni
+    // Si orderData est juste une string, transactionUuid sera undefined, ce qui est géré
     const transactionUuid = orderData.transactionUuid;
+    
     if (!transactionUuid) {
         return { error: 1, data: "Transaction UUID missing" };
     }
@@ -202,19 +203,14 @@ function payOrder(userId, orderId) {
     }
 
     // 3. Vérification du montant (doit être l'opposé du total de la commande)
-    // Exemple : Commande à 1000, Transaction à -1000
     if (transaction.amount !== -order.total) {
         return { error: 1, data: "Le montant de la transaction ne correspond pas" };
     }
 
     // 4. Vérification du destinataire (Compte de la boutique)
-    // ID du compte boutique donné dans l'énoncé : 65d721c44399ae9c8321832c
-    // NB: On suppose que l'objet transaction a un champ 'destination' comme demandé par l'énoncé
     if (transaction.destination !== "65d721c44399ae9c8321832c") {
         return { error: 1, data: "Le destinataire n'est pas la boutique" };
     }
-
-    // --- FIN DES MODIFICATIONS ---
 
     order.status = 'finalized';
     return { error: 0, status: 200, data: order };
