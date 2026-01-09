@@ -167,11 +167,55 @@ function getOrder(userId, orderId) {
     return { error: 0, status: 200, data: order };
 }
 
+// function payOrder(userId, orderId) {
+//     const user = shopusers.find(u => u._id === userId);
+//     if (!user) return { error: 1, data: "User not found" };
+//     const order = user.orders.find(o => o.uuid === orderId);
+//     if (!order) return { error: 1, data: "Order not found - Payment impossible" };
+//     order.status = 'finalized';
+//     return { error: 0, status: 200, data: order };
+// }
+
 function payOrder(userId, orderId) {
     const user = shopusers.find(u => u._id === userId);
     if (!user) return { error: 1, data: "User not found" };
+
+    // On cherche la commande (orderData peut être un objet {uuid, transactionUuid})
+    // Note : On gère le cas où orderData est juste l'ID (vieux code) ou un objet
+    const orderId = orderData.uuid || orderData; 
     const order = user.orders.find(o => o.uuid === orderId);
+    
     if (!order) return { error: 1, data: "Order not found - Payment impossible" };
+
+    // --- DEBUT DES MODIFICATIONS ---
+    
+    // 1. Récupération de l'UUID de transaction fourni
+    const transactionUuid = orderData.transactionUuid;
+    if (!transactionUuid) {
+        return { error: 1, data: "Transaction UUID missing" };
+    }
+
+    // 2. Vérification que la transaction existe
+    const transaction = transactions.find(t => t.uuid === transactionUuid);
+    if (!transaction) {
+        return { error: 1, data: "Transaction bancaire introuvable" };
+    }
+
+    // 3. Vérification du montant (doit être l'opposé du total de la commande)
+    // Exemple : Commande à 1000, Transaction à -1000
+    if (transaction.amount !== -order.total) {
+        return { error: 1, data: "Le montant de la transaction ne correspond pas" };
+    }
+
+    // 4. Vérification du destinataire (Compte de la boutique)
+    // ID du compte boutique donné dans l'énoncé : 65d721c44399ae9c8321832c
+    // NB: On suppose que l'objet transaction a un champ 'destination' comme demandé par l'énoncé
+    if (transaction.destination !== "65d721c44399ae9c8321832c") {
+        return { error: 1, data: "Le destinataire n'est pas la boutique" };
+    }
+
+    // --- FIN DES MODIFICATIONS ---
+
     order.status = 'finalized';
     return { error: 0, status: 200, data: order };
 }
