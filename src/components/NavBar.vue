@@ -1,7 +1,13 @@
 <template>
-  <div class="navbar" id="navbar">
-    <button v-for="(item,index) in titles" :key="index" :style="{color:item.color}" @click="clickMenu(index)">
-      {{item.text}}
+  <div class="navbar">
+    <button 
+      v-for="(link, index) in links" 
+      :key="index" 
+      @click="goTo(link.to)"
+    >
+      <slot name="nav-button" :label="link.label">
+        {{ link.label }}
+      </slot>
     </button>
   </div>
 </template>
@@ -9,24 +15,19 @@
 <script setup>
 import router from "@/router/index.js";
 
+// On attend désormais une liste d'objets { label, to }
 const props = defineProps({
-  titles: Array,
+  links: Array,
 })
 
-const emit = defineEmits(["menuClicked"]);
-
-function clickMenu(linkedIndex) {
-  emit("menuClicked", linkedIndex);
-
-  try {
-    router.push(props.titles[linkedIndex].routing) ;
-  } catch (e) {
-    console.log(e)
+// Plus d'emit, on navigue directement
+function goTo(dest) {
+  if (dest) {
+    router.push(dest);
   }
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .navbar {
   display: flex;
