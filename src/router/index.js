@@ -1,4 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
+
+// Imports des vues Boutique
 import ShopView from "@/views/ShopView.vue";
 import ShopHome from "@/views/ShopHome.vue";
 import ShopBuy from "@/views/ShopBuy.vue";
@@ -7,52 +9,70 @@ import ShopLoginView from "@/views/ShopLoginView.vue";
 import ShopPay from "@/views/ShopPay.vue";
 import BasketView from "@/views/BasketView.vue";
 
+// Import dynamique pour la BankView (Assurez-vous que ce fichier existe bien dans src/views/)
+const BankView = () => import('@/views/BankView.vue');
+
 const routes = [
     { path: '/', redirect: '/shop' },
 
+    // --- ROUTES BOUTIQUE ---
     { path: '/shop/items', redirect: '/shop/buy' },
-
-    {
-        path: '/bank/account',
-        name: 'bankaccount',
-        component: () => import('@/views/BankAccountView.vue')
-    },
     {
         path: '/shop',
         name: 'shop',
-        component: ShopView, // Charge le layout avec <router-view name="shopmain">
+        component: ShopView,
+        children: [
+            { path: '', name: 'shophome', components: { shopmain: ShopHome }, alias: 'home' },
+            { path: 'buy', name: 'shopbuy', components: { shopmain: ShopBuy } },
+            { path: 'orders', name: 'shoporders', components: { shopmain: ShopOrders } },
+            { 
+                path: 'pay/:orderId', 
+                name: 'shoppay', 
+                components: { shopmain: ShopPay }, 
+                props: { shopmain: route => ({ orderUuid: route.params.orderId }) } 
+            },
+            { path: 'login', name: 'shoplogin', components: { shopmain: ShopLoginView } },
+            { path: 'basket', name: 'basket', components: { shopmain: BasketView } }
+        ]
+    },
+
+    // --- ROUTES BANQUE ---
+    {
+        path: '/bank',
+        component: BankView, 
         children: [
             {
-                path: '', // Route par défaut (/shop)
-                name: 'shophome',
-                components: { shopmain: ShopHome },
-                alias: 'home'
+                path: 'home',
+                alias: '', 
+                name: 'bankhome',
+                // Assurez-vous de créer ce fichier ou de retirer cette route si inutile
+                components: { bankmain: () => import('@/views/BankHome.vue') }
             },
             {
-                path: 'buy',
-                name: 'shopbuy',
-                components: { shopmain: ShopBuy } // C'est ici que tu utiliseras ton CheckedList pour acheter
+                path: 'account',
+                name: 'bankaccount',
+                // CORRECTION ICI : On utilise le bon nom de fichier "BankAccountView.vue"
+                components: { bankmain: () => import('@/views/BankAccountView.vue') }
             },
             {
-                path: 'orders',
-                name: 'shoporders',
-                components: { shopmain: ShopOrders }
+                path: 'amount',
+                name: 'bankamount',
+                components: { bankmain: () => import('@/views/BankAmount.vue') }
             },
             {
-                path: 'pay/:orderId',
-                name: 'shoppay',
-                components: { shopmain: ShopPay },
-                props: route => ({orderUuid: route.params.orderId})
+                path: 'operation',
+                name: 'bankoperation',
+                components: { bankmain: () => import('@/views/BankOperation.vue') }
             },
             {
-                path: 'login',
-                name: 'shoplogin',
-                components: { shopmain: ShopLoginView }
+                path: 'history',
+                name: 'bankhistory',
+                components: { bankmain: () => import('@/views/BankHistory.vue') }
             },
             {
-                path: 'basket',
-                name: 'basket',
-                components: { shopmain: BasketView }
+                path: 'logout',
+                name: 'banklogout',
+                components: { bankmain: () => import('@/views/BankLogout.vue') }
             }
         ]
     }
