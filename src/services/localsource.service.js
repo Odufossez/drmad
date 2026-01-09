@@ -19,27 +19,54 @@ import bcryptjs from 'bcryptjs'
  * @param data
  * @returns {{error: number, status: number, data: string}|{error: number, status: number, data: {_id: string | *, name: string | *, login: string | *, email: string | *, session}}}
  */
+// async function shopLogin(data) {
+//     console.log("Data :" + data.login + " " + data.password);
+//   if ((!data.login) || (!data.password)) return {error: 1, status: 404, data: 'aucun login/pass fourni'}
+//   // pour simplifier : test uniquement le login
+//   let user = shopusers.find(e => e.login === data.login)
+//   if (!user) return {error: 1, status: 404, data: 'login incorrect'}
+//   console.log(user);
+//   let mdp = bcryptjs.compareSync(data.password, user.password);
+//   console.log(mdp);
+//   if (!mdp) return {error: 1, status: 404, data: 'pass incorrect'}
+
+//     if (!user.session) {
+//         user.session = uuidv4()
+//     }
+
+//     let userRole = 'user'; // Par défaut
+//     if (user.login === 'drmad') {
+//         userRole = 'admin';
+//     }
+
+//   // retourne uniquement les champs nécessaires
+//   let u = {
+//     _id: user._id,
+//     name: user.name,
+//     login: user.login,
+//     email: user.email,
+//     session: user.session,
+//       role: userRole
+//   }
+//   return {error: 0, status: 200, data: u}
+// }
 async function shopLogin(data) {
     console.log("Data :" + data.login + " " + data.password);
   if ((!data.login) || (!data.password)) return {error: 1, status: 404, data: 'aucun login/pass fourni'}
-  // pour simplifier : test uniquement le login
   let user = shopusers.find(e => e.login === data.login)
   if (!user) return {error: 1, status: 404, data: 'login incorrect'}
-  console.log(user);
   let mdp = bcryptjs.compareSync(data.password, user.password);
-  console.log(mdp);
   if (!mdp) return {error: 1, status: 404, data: 'pass incorrect'}
 
     if (!user.session) {
         user.session = uuidv4()
     }
 
-    let userRole = 'user'; // Par défaut
+    let userRole = 'user';
     if (user.login === 'drmad') {
         userRole = 'admin';
     }
 
-  // retourne uniquement les champs nécessaires
   let u = {
     _id: user._id,
     name: user.name,
@@ -69,12 +96,10 @@ function getAccountAmount(number) {
     if (!number) {
         return {error: 1, status: 404, data: 'aucun numero fourni'};
     }
-    const account = bankaccounts.find(a => a.number === number); //a toute la ligne du data, a.number la section number de la ligne
-
+    const account = bankaccounts.find(a => a.number === number);
     if (!account) {
         return {error: 1, status: 404, data: 'account n\'existe pas '};
     }
-    // générer un uuid de session pour l'utilisateur si non existant
     return {error:0 , status: 200, data: account.amount};
 }
 
@@ -113,11 +138,9 @@ function updateBasket(userId, content) {
 function getBasket(userId) {
     let user = shopusers.find(u => u._id === userId)
     if (user) {
-        // Si l'utilisateur n'a pas encore de panier, on l'initialise
         if (!user.basket) {
             user.basket = { items: [] }
         }
-
         let basket = JSON.parse(JSON.stringify(user.basket))
         return { error: 0, status: 200, data: basket }
     }
@@ -135,7 +158,6 @@ function orderBasket(userId, basket) {
         const virus = items.find(v => v._id === basketEntry.item);
         if (virus) {
             total += virus.price * basketEntry.amount;
-
             orderItems.push({
                 item: { ...virus },
                 amount: basketEntry.amount
@@ -143,7 +165,6 @@ function orderBasket(userId, basket) {
         }
     });
 
-    //création de l'objet commande
     const newOrder = {
         items: orderItems,
         date: new Date(),
@@ -152,7 +173,6 @@ function orderBasket(userId, basket) {
         uuid: uuidv4()
     };
 
-    //Ajout à la liste des commandes de l'utilisateur
     if (!user.orders) user.orders = [];
     user.orders.push(newOrder);
 
@@ -180,34 +200,25 @@ function payOrder(userId, orderData) {
     const user = shopusers.find(u => u._id === userId);
     if (!user) return { error: 1, data: "User not found" };
 
-    // On récupère l'ID, que orderData soit un objet (nouveau code) ou une string (vieux code)
-    // On utilise "targetUuid" pour ne pas entrer en conflit avec une autre variable
     const targetUuid = orderData.uuid || orderData; 
-    
     const order = user.orders.find(o => o.uuid === targetUuid);
     
     if (!order) return { error: 1, data: "Order not found - Payment impossible" };
 
-    // 1. Récupération de l'UUID de transaction fourni
-    // Si orderData est juste une string, transactionUuid sera undefined, ce qui est géré
     const transactionUuid = orderData.transactionUuid;
-    
     if (!transactionUuid) {
         return { error: 1, data: "Transaction UUID missing" };
     }
 
-    // 2. Vérification que la transaction existe
     const transaction = transactions.find(t => t.uuid === transactionUuid);
     if (!transaction) {
         return { error: 1, data: "Transaction bancaire introuvable" };
     }
 
-    // 3. Vérification du montant (doit être l'opposé du total de la commande)
     if (transaction.amount !== -order.total) {
         return { error: 1, data: "Le montant de la transaction ne correspond pas" };
     }
 
-    // 4. Vérification du destinataire (Compte de la boutique)
     if (transaction.destination !== "65d721c44399ae9c8321832c") {
         return { error: 1, data: "Le destinataire n'est pas la boutique" };
     }
@@ -229,11 +240,102 @@ function cancelOrder(userId, uuid) {
 
     const order = user.orders.find(o => o.uuid === uuid);
     if (order) {
-        order.status = 'cancelled'; // Change le statut à "cancelled"
+        order.status = 'cancelled';
         return { error: 0, status: 200, data: "Commande annulée" };
     }
     return { error: 1, data: "Échec de l'annulation" };
 }
+
+function getAccount(data) {
+  if (!data.number) return { error: 1, status: 404, data: 'aucun numero fourni' };
+  let account = bankaccounts.find(a => a.number === data.number);
+  if (account) {
+    return { error: 0, status: 200, data: JSON.parse(JSON.stringify(account)) };
+  }
+  return { error: 1, status: 404, data: 'numéro de compte invalide' };
+}
+
+function getTransactions(data) {
+    if (!data.idAccount) return { error: 1, status: 404, data: 'aucun id de compte fourni' };
+    let trans = transactions.filter(t => t.account === data.idAccount);
+    if (trans && trans.length > 0) {
+        return { error: 0, status: 200, data: JSON.parse(JSON.stringify(trans)) };
+    }
+    return { error: 1, status: 404, data: 'aucune transaction pour ce compte' };
+}
+
+function createWithdraw(data) {
+    let account = bankaccounts.find(a => a._id === data.idAccount);
+    if (!account) return { error: 1, status: 404, data: 'id de compte invalide' };
+    
+    // Valeur absolue pour le calcul
+    let amountVal = Math.abs(data.amount); 
+    
+    let newTrans = {
+        _id: uuidv4(),
+        amount: -amountVal, // Montant négatif
+        account: data.idAccount,
+        date: { $date: new Date().toISOString() },
+        uuid: uuidv4()
+    };
+    
+    transactions.push(newTrans);
+    account.amount -= amountVal;
+    
+    return { error: 0, status: 200, data: { uuid: newTrans.uuid, amount: account.amount } };
+}
+
+function createPayment(data) {
+     let senderAccount = bankaccounts.find(a => a._id === data.idAccount);
+     if (!senderAccount) return { error: 1, status: 404, data: 'id de compte invalide' };
+     
+     let destAccount = bankaccounts.find(a => a.number === data.destNumber);
+     if (!destAccount) return { error: 1, status: 404, data: 'compte destinataire inexistant' };
+     
+     let amountVal = Math.abs(data.amount);
+     let date = { $date: new Date().toISOString() };
+     
+     // Transaction 1: Débit expéditeur
+     let transDebit = {
+         _id: uuidv4(),
+         amount: -amountVal,
+         account: senderAccount._id,
+         date: date,
+         uuid: uuidv4(),
+         destination: destAccount._id
+     };
+     
+     // Transaction 2: Crédit destinataire
+     let transCredit = {
+         _id: uuidv4(),
+         amount: amountVal,
+         account: destAccount._id,
+         date: date, // Même date
+         uuid: uuidv4() // UUID différent
+     };
+     
+     transactions.push(transDebit);
+     transactions.push(transCredit);
+     
+     senderAccount.amount -= amountVal;
+     destAccount.amount += amountVal;
+     
+     return { error: 0, status: 200, data: { uuid: transDebit.uuid, amount: senderAccount.amount } };
+}
+
+// export default{
+//     shopLogin,
+//     getAllViruses,
+//     getAccountAmount,
+//     getAccountTransactions,
+//     updateBasket,
+//     getBasket,
+//     orderBasket,
+//     getOrder,
+//     payOrder,
+//     getUserOrders,
+//     cancelOrder
+// }
 
 export default{
     shopLogin,
@@ -246,5 +348,10 @@ export default{
     getOrder,
     payOrder,
     getUserOrders,
-    cancelOrder
+    cancelOrder,
+    // Exports bancaires
+    getAccount,
+    getTransactions,
+    createWithdraw,
+    createPayment
 }
