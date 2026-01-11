@@ -25,7 +25,7 @@ import router from '@/router/index.js';
 
 const shopStore = useShopStore();
 
-// On transforme les IDs en objets complets pour l'affichage dans CheckedList
+
 const fullItems = computed(() => {
   return shopStore.basket.items.map(entry => {
     const virus = shopStore.viruses.find(v => v._id === entry.item);
@@ -46,14 +46,14 @@ function clearBasket() {
 }
 
 async function validateOrder() {
-  // Appel au service pour créer la commande (5.4)
+  
   const res = await ShopService.orderBasket(shopStore.shopUser._id, shopStore.basket);
 
   if (res.error === 0) {
     let uuid = res.data.uuid;
     if (uuid === undefined) uuid =
-    await shopStore.clearBasket(); // On vide après l'achat
-    await router.push('/shop/pay/' + uuid); // Redirection vers le paiement
+    await shopStore.clearBasket(); 
+    await router.push('/shop/pay/' + uuid); 
   }
 }
 </script>

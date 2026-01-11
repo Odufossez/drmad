@@ -17,13 +17,12 @@ const router = useRouter();
 const bankStore = useBankStore();
 
 onMounted(() => {
-  // On attend 1 seconde (1000 ms) avant d'agir
+  
   setTimeout(() => {
-    // 1. On vide le store (efface le compte courant)
+    
     bankStore.logout();
     
-    // 2. On redirige vers l'accueil de la banque
-    // Note : '/bank' affichera BankHome grâce à l'alias défini dans votre routeur
+   
     router.push('/bank');
   }, 1000);
 });
@@ -34,7 +33,7 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100%; /* Prend toute la hauteur disponible dans la zone centrale */
+  height: 100%; 
   text-align: center;
 }
 

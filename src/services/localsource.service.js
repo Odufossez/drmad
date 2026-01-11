@@ -125,7 +125,7 @@ function getAccountTransactions(number) {
   }
 }
 
-//maj du panier quand un utilisateur se connecte
+
 function updateBasket(userId, content) {
     let user = shopusers.find(e => e._id === userId);
     if (user) {

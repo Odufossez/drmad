@@ -25,12 +25,12 @@
 <script setup>
 import router from "@/router/index.js";
 
-// Le composant reçoit une liste d'objets { type, label, to }
+
 const props = defineProps({
   items: Array,
 })
 
-// Fonction de navigation
+
 function goTo(dest) {
   if (dest) {
     router.push(dest);
@@ -42,20 +42,20 @@ function goTo(dest) {
 .vertical-menu {
   display: flex;
   flex-direction: column;
-  gap: 10px; /* Espacement entre les éléments */
+  gap: 10px; 
 }
 
 .menu-title {
-  margin-top: 15px; /* Un peu d'espace avant les titres */
+  margin-top: 15px; 
   margin-bottom: 5px;
 }
 
 .menu-link {
   cursor: pointer;
-  display: block; /* Pour que le span prenne la largeur si besoin */
+  display: block; 
 }
 
-/* Style par défaut pour le bouton si le slot n'est pas surchargé */
+
 button {
   width: 100%;
   text-align: left;

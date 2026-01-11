@@ -15,12 +15,12 @@
 <script setup>
 import router from "@/router/index.js";
 
-// On attend désormais une liste d'objets { label, to }
+
 const props = defineProps({
   links: Array,
 })
 
-// Plus d'emit, on navigue directement
+
 function goTo(dest) {
   if (dest) {
     router.push(dest);

@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-// Pas de logique spécifique pour l'accueil
+
 </script>
 
 <style scoped>

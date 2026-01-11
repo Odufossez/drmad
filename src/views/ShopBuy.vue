@@ -13,7 +13,7 @@ watch(() => shopStore.viruses, (newViruses) => {
   }
 }, { immediate: true });
 
-//mise à jour de l'état de la checked box dynamique
+
 function updateChecked(index) {
   checkedItems.value[index] = !checkedItems.value[index];
 }
@@ -25,7 +25,6 @@ function onAddOne(item) {
 function onAddSelection(selection) {
   if (selection.length > 0) {
     shopStore.addToBasket(selection);
-    //décocher après ajout
     checkedItems.value = checkedItems.value.map(() => false);
   }
 }

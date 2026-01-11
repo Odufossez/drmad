@@ -42,16 +42,12 @@
 </template>
 
 <script setup>
-/* ***************************
-  IMPORTS
- *************************** */
+
 import {ref, computed, watch} from "vue"
 import {useShopStore} from "@/stores/shop.js";
 import CheckedList from "@/components/CheckedList.vue";
 
-/* ***************************
-  STATE
- *************************** */
+
 const shopStore = useShopStore()
 const priceFilter = ref(0)
 const nameFilter = ref('')
@@ -60,9 +56,7 @@ const filterPriceActive = ref(false)
 const filterNameActive = ref(false)
 const filterStockActive = ref(false)
 
-/* ***************************
-  COMPUTED
- *************************** */
+
 let selected = ref([]) //contient des indices globaux
 const checked = computed(() => {
   return filterViruses.value.map(v => {
@@ -97,9 +91,7 @@ const filterVirusesByStock = computed(() => {
 })
 
 /**
- * filterViruses ne peut pas réutiliser les 3 fonctions précédentes puisqu'elles
- * utilisent toutes comme base shopStore.viruses. Or, s'il y a plus de un filtre,
- * il faut faire un filtrage cumulatif, donc reprendre le résultat du filtre précédent
+ *
  * @type {ComputedRef<[]>}
  */
 const filterViruses = computed(() => {
@@ -119,7 +111,7 @@ const filterViruses = computed(() => {
   return list
 })
 
-//la boite d'alerte quand on clique sur info
+/
 function addToBasket(index) {
   let item = filterViruses.value[index]
   let stock = ""
@@ -128,7 +120,7 @@ function addToBasket(index) {
   alert("Name : " + item.name + "\nPrice : " + item.price + "\nStock : " + stock + "");
 }
 
-//la boite d'alerte quand on clique sur le bouton "Voir sélection".
+
 function addAllToBasket() {
   const virusNames = selected.value
       .map(i => shopStore.viruses[i].name)
@@ -140,7 +132,7 @@ function addAllToBasket() {
 function changeSelected(filteredIdx) {
   const virus = filterViruses.value[filteredIdx]
 
-  // on cherche l’indice dans la liste complète
+
   const globalIndex = shopStore.viruses.indexOf(virus)
 
   const pos = selected.value.indexOf(globalIndex)
@@ -153,12 +145,12 @@ function changeSelected(filteredIdx) {
 }
 
 watch(filterViruses, (newList) => {
-  // obtenir les indices globaux de la liste filtrée
+  
   const filteredGlobalIndices = newList.map(v =>
       shopStore.viruses.indexOf(v)
   )
 
-  // ne garder que ceux qui sont encore présents
+  
   selected.value = selected.value.filter(idx =>
       filteredGlobalIndices.includes(idx)
   )

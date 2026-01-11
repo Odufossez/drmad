@@ -46,7 +46,7 @@ onMounted(async () => {
 });
 
 function goToPay(uuid) {
-  // Redirection vers la route de paiement avec l'UUID
+  
   router.push(`/shop/pay/${uuid}`);
 }
 

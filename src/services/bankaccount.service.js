@@ -49,7 +49,7 @@
 
 import LocalSource from "@/services/localsource.service.js";
 
-// --- Fonctions Secondaires (appels directs à la source locale) ---
+
 
 function getAccountFromLocalSource(number) {
     return LocalSource.getAccount({number: number});
@@ -67,7 +67,7 @@ function createPaymentFromLocalSource(idAccount, amount, destNumber) {
     return LocalSource.createPayment({idAccount: idAccount, amount: amount, destNumber: destNumber});
 }
 
-// On garde les anciennes fonctions secondaires si elles sont utilisées ailleurs
+
 function getAccountAmountFromLocalSource(number)  {
     return LocalSource.getAccountAmount(number);
 }
@@ -76,7 +76,7 @@ function getTransactionFromLocalSource(number){
 }
 
 
-// --- Fonctions Principales (appels depuis le store/composants) ---
+
 
 async function getAccount(number) {
     let response = null;
@@ -118,7 +118,7 @@ async function createPayment(idAccount, amount, destNumber) {
     return response;
 }
 
-// Anciennes fonctions principales conservées
+
 async function getAccountAmount(number) {
     let response = null;
     try {

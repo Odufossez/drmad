@@ -11,17 +11,17 @@
             />
           </td>
 
-          <!-- Affichage des champs demandés -->
+        
           <td v-for="field in fields" :key="field" class="data-cell">
             {{ item[field] }}
           </td>
 
-          <!-- Bouton d'item si itemButton.show est true -->
+       
           <td v-if="itemButton && itemButton.show" class="button-cell">
             <span v-if="itemAmount">
               <input type="number" v-model="amounts[index]" class="amount-input" />
             </span>
-            <!-- Button info-->
+          
             <button @click="itemButtonClicked(index)">
               {{ itemButton.text }}
             </button>
@@ -30,7 +30,7 @@
       </tbody>
     </table>
 
-    <!-- Bouton de liste si listButton.show est true -->
+  
     <button
       v-if="listButton && listButton.show"
       @click="listButtonClicked"
@@ -49,8 +49,8 @@ const props = defineProps({
   fields: Array, 
   itemCheck: Boolean,
   checked: Array, 
-  itemButton: Object, // l'objet pour les boutons d'items
-  listButton: Object, // l'objet pour le bouton de liste
+  itemButton: Object, 
+  listButton: Object, 
   itemAmount: Boolean,
 })
 
@@ -79,7 +79,7 @@ function listButtonClicked() {
       props.checked.forEach((isChecked, index) => {
         if (isChecked) {
           selected.push({ index, amount: amounts.value[index] });
-          selected.checked = false; //déselectionne la case
+          selected.checked = false; 
         }
       });
     }
@@ -118,7 +118,7 @@ table {
   width: 80%;
   max-width: 700px;
   border-collapse: separate;
-  border-spacing: 0 10px; /* espace vertical entre les lignes */
+  border-spacing: 0 10px; 
   margin-bottom: 10px;
   margin-left: auto;
   margin-right: auto;
@@ -127,7 +127,7 @@ table {
 .data-cell,
 .checkbox-cell,
 .button-cell {
-  padding: 16px 12px; /* espace horizontal et vertical dans chaque cellule */
+  padding: 16px 12px; 
   font-size: 16px;
 }
 

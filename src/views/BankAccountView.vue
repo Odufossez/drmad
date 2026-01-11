@@ -45,7 +45,7 @@ import { ref, computed } from "vue";
 import { useBankStore } from "@/stores/bank.js";
 
 // --- STATE ---
-const number = ref('FRBADORG78901234567890-0000001'); // Valeur par défaut pour tester plus vite
+const number = ref('FRBADORG78901234567890-0000001'); 
 const bankStore = useBankStore();
 const errorMsg = ref('');
 
@@ -61,7 +61,7 @@ const isAccountNumberValid = computed(() => {
 async function fetchAccount() {
   errorMsg.value = '';
   
-  // On appelle la méthode du store mise à jour précédemment
+  
   const response = await bankStore.getAccount(number.value);
   
   if (response.error !== 0) {
@@ -77,7 +77,7 @@ function convertDate(dateVal) {
 function reset() {
   number.value = '';
   errorMsg.value = '';
-  bankStore.logout(); // Vide le store
+  bankStore.logout(); 
 }
 </script>
 

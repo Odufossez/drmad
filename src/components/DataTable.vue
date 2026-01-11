@@ -47,7 +47,7 @@
 <script setup>
 import { ref } from 'vue';
 
-// 1. Définition des Props
+
 const props = defineProps({
   items: {
     type: Array,
@@ -56,7 +56,7 @@ const props = defineProps({
   headers: {
     type: Array,
     required: true
-    // Format attendu: [{ label: 'Titre', name: 'cle_objet' }, ...]
+ 
   },
   itemCheck: {
     type: Boolean,
@@ -72,20 +72,19 @@ const props = defineProps({
   }
 });
 
-// 2. Définition des Événements
+
 const emit = defineEmits(['itemClicked', 'tableClicked']);
 
-// 3. État local pour gérer les sélections (cases à cocher)
+
 const selectedItems = ref([]);
 
-// 4. Gestionnaire de clic pour le bouton de ligne
+
 function onItemClick(item) {
   emit('itemClicked', item);
 }
 
-// 5. Gestionnaire de clic pour le bouton global
+
 function onTableClick() {
-  // On envoie la liste des objets qui ont été cochés
   emit('tableClicked', selectedItems.value);
 }
 </script>
